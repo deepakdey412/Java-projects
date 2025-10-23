@@ -70,7 +70,7 @@ public class UserController {
             return ResponseEntity.ok(message); // 200 OK
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Cannot delete — User not found with id: " + id); // 404 Not Found
+                    .body(e.getMessage() + id); // 404 Not Found
         }
     }
 }
