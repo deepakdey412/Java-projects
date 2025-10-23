@@ -30,36 +30,21 @@ public class UserController {
     // ✅ 2. Get User by ID
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get()); // 200 OK
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found with id: " + id); // 404 Not Found
-        }
+        User foundUser = userService.getUser(id);
+        return ResponseEntity.status(HttpStatus.FOUND).body(foundUser);
     }
 
     // ✅ 3. Get All Users
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        if (users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
-        } else {
-            return ResponseEntity.ok(users); // 200 OK
-        }
+        return ResponseEntity.status(HttpStatus.FOUND).body(users);
     }
 
     // ✅ 4. Update User
     @PutMapping("/users/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) {
-        try {
-            User updatedUser = userService.updateUser(id, user);
-            return ResponseEntity.ok(updatedUser); // 200 OK
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Cannot update — User not found with id: " + id); // 404 Not Found
-        }
+        
     }
 
     // ✅ 5. Delete User

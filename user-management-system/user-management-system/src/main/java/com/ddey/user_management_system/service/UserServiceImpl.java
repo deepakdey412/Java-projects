@@ -1,6 +1,7 @@
 package com.ddey.user_management_system.service;
 
 import com.ddey.user_management_system.entity.User;
+import com.ddey.user_management_system.exception.UserNotFoundException;
 import com.ddey.user_management_system.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    public User getUser(Long id) {
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return existingUser;
     }
 
     @Override
@@ -33,27 +35,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, User user) {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser.isPresent()) {
-            User newUser = foundUser.get();
-            newUser.setName(user.getName());
-            newUser.setEmail(user.getEmail());
-            newUser.setPassword(user.getPassword());
-            return userRepository.save(newUser);
-        } else {
-            throw new RuntimeException("User not found..");
-        }
+
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        existingUser.setName(user.getName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPassword(user.getPassword());
+
+        return userRepository.save(existingUser);
     }
-    
+
     @Override
     public String deleteUser(Long id) {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser.isPresent()) {
-            User user = foundUser.get();
-            userRepository.delete(user);
-            return "User deleted of id " + id;
-        } else {
-            throw new RuntimeException("User not found..");
-        }
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        userRepository.delete(existingUser);
+        return "User delete of id "+ id;
     }
 }
