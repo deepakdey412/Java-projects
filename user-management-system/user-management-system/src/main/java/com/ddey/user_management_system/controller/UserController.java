@@ -2,18 +2,16 @@ package com.ddey.user_management_system.controller;
 
 import com.ddey.user_management_system.entity.User;
 import com.ddey.user_management_system.service.UserServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.LogManager;
 
 @RestController
-@RequestMapping(path = "/user-api" , produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/user-api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserServiceImpl userService;
@@ -21,19 +19,58 @@ public class UserController {
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
-    public User create(@RequestBody  User user){
-        return userService.createUser(user);
+
+    // ✅ 1. Create User
+    @PostMapping("/users")
+    public ResponseEntity<User> create(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser); // 201 Created
     }
-    public Optional<User> getUserByid(@PathVariable Long id){
-        return userService.getUser(id);
+
+    // ✅ 2. Get User by ID
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get()); // 200 OK
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with id: " + id); // 404 Not Found
+        }
     }
-    public List<User> getAllUsers(){
-        return userService.getAllUsers();
+
+    // ✅ 3. Get All Users
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
+        } else {
+            return ResponseEntity.ok(users); // 200 OK
+        }
     }
-    public User update(@PathVariable Long id , @RequestBody User user){
-        return userService.updateUser(id, user);
+
+    // ✅ 4. Update User
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user);
+            return ResponseEntity.ok(updatedUser); // 200 OK
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Cannot update — User not found with id: " + id); // 404 Not Found
+        }
     }
-    public String delete(@PathVariable Long id){
-        return userService.deleteUser(id);
+
+    // ✅ 5. Delete User
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            String message = userService.deleteUser(id);
+            return ResponseEntity.ok(message); // 200 OK
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Cannot delete — User not found with id: " + id); // 404 Not Found
+        }
     }
 }
