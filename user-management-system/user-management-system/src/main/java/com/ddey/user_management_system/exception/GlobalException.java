@@ -4,7 +4,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceiton {
+public class GlobalException {
     @ExceptionHandler(UserNotFoundException.class)
+    public Resp
 
 }
