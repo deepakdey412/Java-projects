@@ -1,6 +1,9 @@
 package com.ddey.user_management_system.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -8,8 +11,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "user_name")
+    @NotBlank(message = "Name is required.")
+    @Size(min = 10 , max = 20)
     private String name;
+
+    @Column(name = "user_email", nullable = false)
+    @Email(message = "Enter a valid email")
     private String email;
+
+    @Column(name = "user_password")
+
     private String password;
 
     public User(){}
