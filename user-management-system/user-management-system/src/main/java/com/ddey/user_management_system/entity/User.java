@@ -18,6 +18,12 @@ public class User {
     @NotBlank(message = "Name is required.")      // Validation: not blank
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters.") // Validation: length
     @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters") // Validation: only letters and space
+    // @Pattern → Bean Validation annotation, checks if field matches given regex
+    // regexp = "^[a-zA-Z ]+$"
+    // ^ → string start
+    // [a-zA-Z ] → only lowercase (a-z), uppercase (A-Z), and space allowed
+    // + → one or more characters
+    // $ → string end
     private String name;
 
     @Column(name = "user_email", nullable = false, unique = true) // DB: not null, unique
