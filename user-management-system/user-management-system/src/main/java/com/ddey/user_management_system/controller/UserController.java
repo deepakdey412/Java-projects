@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/user-api", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,18 +43,14 @@ public class UserController {
     // ✅ 4. Update User
     @PutMapping("/users/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) {
-        
+        User updatedUser  = userService.updateUser(id , user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedUser);
     }
 
     // ✅ 5. Delete User
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            String message = userService.deleteUser(id);
-            return ResponseEntity.ok(message); // 200 OK
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage() + id); // 404 Not Found
-        }
+        String notify = userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(notify);
     }
 }
