@@ -36,6 +36,10 @@ public class User {
     @Size(min = 6, max = 100)                        // Validation: length
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     public User() {}
     public User(Long id, String name, String email, String password){
         this.id = id;
