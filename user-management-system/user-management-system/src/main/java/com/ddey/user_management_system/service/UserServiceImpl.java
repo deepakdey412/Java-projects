@@ -19,11 +19,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        User newUser = new User();
         if (user.getRole() == null){
-            newUser.setRole(Role.STUDENT);
+            user.setRole(Role.STUDENT);
         }
-        return userRepository.save(newUser);
+        return userRepository.save(user);
     }
 
     @Override
