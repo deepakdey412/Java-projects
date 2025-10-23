@@ -1,12 +1,12 @@
 package com.ddey.user_management_system.service;
 
+import com.ddey.user_management_system.entity.Role;
 import com.ddey.user_management_system.entity.User;
 import com.ddey.user_management_system.exception.UserNotFoundException;
 import com.ddey.user_management_system.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,7 +19,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        return userRepository.save(user);
+        User newUser = new User();
+        if (user.getRole() == null){
+            newUser.setRole(Role.STUDENT);
+        }
+        return userRepository.save(newUser);
     }
 
     @Override
@@ -45,6 +49,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setName(user.getName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
+        existingUser.setRole(user.getRole());
 
         return userRepository.save(existingUser);
     }

@@ -41,7 +41,7 @@ public class User {
     private Role role;
 
     public User() {}
-    
+
     public User(Long id, String name, String email, String password){
         this.id = id;
         this.name = name;
