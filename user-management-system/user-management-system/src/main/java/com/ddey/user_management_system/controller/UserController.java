@@ -19,38 +19,33 @@ public class UserController {
         this.userService = userService;
     }
 
-    // ✅ 1. Create User
     @PostMapping("/users")
     public ResponseEntity<User> create(@RequestBody User user) {
         User createdUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser); // 201 Created
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    // ✅ 2. Get User by ID
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User foundUser = userService.getUser(id);
-        return ResponseEntity.status(HttpStatus.FOUND).body(foundUser);
+        return ResponseEntity.ok(foundUser); // 200 OK
     }
 
-    // ✅ 3. Get All Users
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.FOUND).body(users);
+        return ResponseEntity.ok(users); // 200 OK
     }
 
-    // ✅ 4. Update User
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser  = userService.updateUser(id , user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updatedUser);
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser); // 200 OK
     }
 
-    // ✅ 5. Delete User
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         String notify = userService.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.OK).body(notify);
+        return ResponseEntity.ok(notify); // 200 OK
     }
 }
