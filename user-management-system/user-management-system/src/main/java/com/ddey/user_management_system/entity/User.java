@@ -3,6 +3,7 @@ package com.ddey.user_management_system.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -15,7 +16,8 @@ public class User {
 
     @Column(name = "user_name", nullable = false) // DB: not null
     @NotBlank(message = "Name is required.")      // Validation: not blank
-    @Size(min = 3, max = 50)                      // Validation: length
+    @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters.") // Validation: length
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters") // Validation: only letters and space
     private String name;
 
     @Column(name = "user_email", nullable = false, unique = true) // DB: not null, unique
