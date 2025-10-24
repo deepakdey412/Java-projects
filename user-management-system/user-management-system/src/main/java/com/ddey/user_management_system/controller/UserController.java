@@ -1,5 +1,7 @@
 package com.ddey.user_management_system.controller;
 
+import com.ddey.user_management_system.dto.UserRequestDTO;
+import com.ddey.user_management_system.dto.UserResponseDTO;
 import com.ddey.user_management_system.entity.User;
 import com.ddey.user_management_system.service.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -22,8 +24,8 @@ public class UserController {
 
     // ✅ Create User with Validation
     @PostMapping("/users")
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO createdUser = userService.createUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 

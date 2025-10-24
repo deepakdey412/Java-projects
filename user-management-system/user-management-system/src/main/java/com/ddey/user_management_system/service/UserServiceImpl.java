@@ -1,9 +1,12 @@
 package com.ddey.user_management_system.service;
 
+import com.ddey.user_management_system.dto.UserRequestDTO;
+import com.ddey.user_management_system.dto.UserResponseDTO;
 import com.ddey.user_management_system.entity.Role;
 import com.ddey.user_management_system.entity.User;
 import com.ddey.user_management_system.exception.UserNotFoundException;
 import com.ddey.user_management_system.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,17 +15,21 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public User createUser(User user) {
-        if (user.getRole() == null){
-            user.setRole(Role.STUDENT);
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+        if (userRequestDTO.getRole() == null){
+            userRequestDTO.setRole(String.valueOf(Role.STUDENT));
         }
-        return userRepository.save(user);
+        User newUser = modelMapper.map(userRequestDTO , User.class);
+        User savedUser = userRepository.save(newUser);
+        return modelMapper.map(savedUser , UserResponseDTO.class);
     }
 
     @Override
