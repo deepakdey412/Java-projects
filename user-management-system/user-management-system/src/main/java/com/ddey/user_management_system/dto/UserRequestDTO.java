@@ -25,7 +25,6 @@ public class UserRequestDTO {
     @Size(min = 6, max = 100)                        // Validation: length
     private String password;
 
-    @NotBlank(message = "Role is required")
     private String role; // Admin / Teacher / Student
 
     public UserRequestDTO() {

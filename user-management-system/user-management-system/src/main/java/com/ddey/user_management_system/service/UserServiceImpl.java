@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     // ✅ Create user
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        if (userRequestDTO.getRole() == null){
+        if (userRequestDTO.getRole() == null || userRequestDTO.getRole().isBlank()) {
             userRequestDTO.setRole(String.valueOf(Role.STUDENT));
         }
         User newUser = modelMapper.map(userRequestDTO , User.class);
