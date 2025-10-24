@@ -9,6 +9,7 @@ import com.ddey.user_management_system.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
         this.modelMapper = modelMapper;
     }
 
+    // ✅ Create user
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         if (userRequestDTO.getRole() == null){
@@ -32,42 +34,45 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(savedUser , UserResponseDTO.class);
     }
 
+    // ✅ Get single user
     @Override
     public UserResponseDTO getUser(Long id) {
-        // Using orElseThrow directly on Optional to throw exception if user not found
-        // No need to store Optional separately
-
-        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        UserResponseDTO getFoundUser = modelMapper.map(existingUser , UserResponseDTO.class);
-        return getFoundUser;
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return modelMapper.map(existingUser , UserResponseDTO.class);
     }
 
+    // ✅ Get all users
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponseDTO> listOfUsers = new ArrayList<>();
+        for (User user : users) {
+            listOfUsers.add(modelMapper.map(user, UserResponseDTO.class));
+        }
+        return listOfUsers;
     }
 
+    // ✅ Update user
     @Override
-    public User updateUser(Long id, User user) {
-        // Using orElseThrow directly on Optional to throw exception if user not found
-        // No need to store Optional separately
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setRole(user.getRole());
+        // Map request DTO fields to existing entity
+        modelMapper.map(userRequestDTO, existingUser);
 
-        return userRepository.save(existingUser);
+        User updatedUser = userRepository.save(existingUser);
+
+        return modelMapper.map(updatedUser, UserResponseDTO.class);
     }
 
+    // ✅ Delete user
     @Override
     public String deleteUser(Long id) {
-        // Using orElseThrow directly on Optional to throw exception if user not found
-        // No need to store Optional separately
-
-        User existingUser = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         userRepository.delete(existingUser);
-        return "User delete of id " + id;
+        return "User deleted with id " + id;
     }
 }
