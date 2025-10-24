@@ -31,8 +31,8 @@ public class UserController {
 
     // ✅ Get User by ID
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User foundUser = userService.getUser(id);
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        UserResponseDTO foundUser = userService.getUser(id);
         return ResponseEntity.ok(foundUser); // 200 OK
     }
 
