@@ -44,8 +44,7 @@ public class UserController {
 
     // ✅ Update User with Validation using DTO
     @PutMapping("/users/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id,
-                                                  @Valid @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id,@Valid @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO updatedUser = userService.updateUser(id, userRequestDTO);
         return ResponseEntity.ok(updatedUser);
     }
