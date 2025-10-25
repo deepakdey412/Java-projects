@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+//When ever we use the modelmapper dependency we use this configuration class
 @Configuration
 public class ModelMapperConfig {
 
